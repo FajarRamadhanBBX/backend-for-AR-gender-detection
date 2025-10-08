@@ -37,7 +37,7 @@ async def root():
     return {"message": "API is running"}
 
 @app.post("/predict")
-async def predict(req: ImageRequest): # <-- PERBAIKAN: Terima data menggunakan Pydantic model
+async def predict(req: ImageRequest):
     if model is None:
         raise HTTPException(status_code=500, detail="Model tidak berhasil dimuat")
     
@@ -58,10 +58,11 @@ async def predict(req: ImageRequest): # <-- PERBAIKAN: Terima data menggunakan P
         return {
             "full_result": prediction.tolist(),
             "prediction": gender,
-            "confidence": f"{confidence_score:.2%}"
+            "confidence": confidence_score
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error saat memproses gambar: {str(e)}")
 
 if __name__ == "__main__":
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
